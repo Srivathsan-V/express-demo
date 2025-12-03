@@ -17,28 +17,29 @@ jobs:
 
     steps:
       - name: Checkout code
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
-      - name: setup Node
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: 'npm'
 
-      - name: copy env and install dependencies
+      - name: Copy env and install dependencies
         run: |
-           cp env.template.txt .env
-           npm --version
-           node --version
-           npm ci
-           npm prune
-      - name: Build application
-        run : npm run build
+          cp env.template.txt .env
+          npm --version
+          node --version
+          npm ci
+          npm prune
 
-      - name: set up Docker buildx
+      - name: Build application
+        run: npm run build
+
+      - name: Set up Docker buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to dockerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -50,9 +51,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
           tags: |
-           ${{ env.DOCKER_IMAGE_NAME }}:ci-${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+            ${{ env.DOCKER_IMAGE_NAME }}:ci-${{ github.run_number }}
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE_NAME }}:buildcache, mode=max
-    
+          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE_NAME }}:buildcache,mode=max
