@@ -28,7 +28,7 @@ jobs:
       - name: Copy env and install dependencies
         run: |
           # cp env.template.txt .env
-          ls -la .env
+          # ls -la .env
           npm --version
           node --version
           npm ci
@@ -54,6 +54,6 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-            ${{ env.DOCKER_IMAGE_NAME }}:ci-${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:ci-${{ github.run_number }}
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_IMAGE_NAME }}:buildcache,mode=max
