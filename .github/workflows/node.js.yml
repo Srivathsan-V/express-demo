@@ -27,8 +27,8 @@ jobs:
 
       - name: Copy env and install dependencies
         run: |
-          #cp env.template.txt .env
-          #ls -la .env
+          cp env.template.txt .env
+          ls -la .env
           pwd
           npm --version
           node --version
